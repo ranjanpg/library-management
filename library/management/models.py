@@ -16,12 +16,17 @@ class Reservation(models.Model):
     class Status(models.IntegerChoices):
         ACTIVE = 1
         CANCELLED = 2
+        CHECKED_OUT=3
 
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reservations')
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='reservations')
     createdAt = models.DateTimeField(auto_now_add=True)
-    status = models.BooleanField(choices = Status.choices, default=1)
+    status = models.IntegerField(choices = Status.choices, default=1)
 
 class Checkout(models.Model):
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, related_name='checkoutDetails')
     createdAt = models.DateTimeField(auto_now_add=True)
+
+    def clean(self) -> None:
+        self.reservation.status = Reservation.Status.CHECKED_OUT
+        return super().clean()
