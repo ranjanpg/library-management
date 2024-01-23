@@ -9,7 +9,6 @@ class AuthorSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class BookSerializer(serializers.HyperlinkedModelSerializer):
-    author = serializers.HyperlinkedRelatedField(view_name='author-detail', read_only=True)
 
     class Meta:
         model = Book
