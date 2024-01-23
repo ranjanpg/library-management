@@ -2,15 +2,14 @@ from rest_framework import serializers
 from .models import *
 
 class AuthorSerializer(serializers.ModelSerializer):
-    uri = serializers.HyperlinkedIdentityField(view_name='author-detail', read_only=True)
+    url = serializers.HyperlinkedIdentityField(view_name='author-detail', read_only=True)
 
     class Meta:
         model = Author
-        fields = ['name','uri']
+        fields = '__all__'
 
 class BookSerializer(serializers.HyperlinkedModelSerializer):
     author = serializers.HyperlinkedRelatedField(view_name='author-detail', read_only=True)
-    uri = serializers.HyperlinkedIdentityField(view_name='book-detail', read_only=True)
 
     class Meta:
         model = Book
@@ -20,19 +19,20 @@ class MemberSerializer(serializers.ModelSerializer):
     uri = serializers.HyperlinkedIdentityField(view_name='member-detail', read_only=True)
     class Meta:
         model = Member
-        fields = ['name', 'uri']
+        fields = '__all__'
 
 class ReservationSerializer(serializers.HyperlinkedModelSerializer):
-    createdAt = serializers.DateTimeField()
+    status = serializers.SerializerMethodField()
+
+    def get_status(self, obj):
+        return obj.get_status_display()
 
     class Meta:
         model = Reservation
-        fields = ['member', 'book', 'createdAt', 'status']
+        fields = '__all__'
 
 class CheckoutSerializer(serializers.HyperlinkedModelSerializer):
-    reservation = ReservationSerializer()
-    createdAt = serializers.DateTimeField()
 
     class Meta:
         model = Checkout
-        fields = ['reservation', 'createdAt']
+        fields = '__all__'
