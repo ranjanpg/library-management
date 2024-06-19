@@ -9,7 +9,7 @@ class  AuthorAdmin(ModelAdmin):
 
 @register(Book)
 class  BookAdmin(ModelAdmin):
-    list_display = ['title', 'author']
+    list_display = ['title', 'count']
 
 
 @register(Member)
